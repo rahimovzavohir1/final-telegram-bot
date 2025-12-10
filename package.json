@@ -1,4 +1,4 @@
-{
+{  
   "name": "final-telegram-bot",
   "version": "1.0.0",
   "main": "index.js",
@@ -20,6 +20,8 @@
   "description": "",
   "dependencies": {
     "dotenv": "^17.2.3",
+    "i": "^0.3.7",
+    "mongoose": "^9.0.1",
     "node-telegram-bot-api": "^0.66.0"
   },
   "devDependencies": {
