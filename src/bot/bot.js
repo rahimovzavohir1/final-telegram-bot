@@ -1,6 +1,4 @@
 import TelegramBot from "node-telegram-bot-api";
-
-npm
 import dotenv from "dotenv";
 import onCommands from "./handlers/message/onCommands.js";
 import onError from "./handlers/message/onError.js";
