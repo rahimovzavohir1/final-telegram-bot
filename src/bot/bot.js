@@ -1,4 +1,3 @@
-
 import TelegramBot from "node-telegram-bot-api";
 import dotenv from "dotenv";
 import onCommands from "./handlers/message/onCommands.js";
@@ -47,16 +46,43 @@ bot.on("message", async function (msg) {
     return onCommands(msg);
   }
 
-  return onError();
+  if (text == "📚 Kurslar") {
+    return bot.sendMessage(
+      chatId,
+      `🎓 Bizning o‘quv markazimizda quyidagi kurslar mavjud:
+
+    1️⃣ Ingliz tili  
+    2️⃣ Rus tili  
+    3️⃣ Matematika  
+    4️⃣ Dasturlash (Python, Web)  
+    5️⃣ Grafik dizayn  
+    
+    👇 Quyidagi kurslardan birini tanlang va batafsil ma’lumot oling:
+    `,
+      {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: "🇬🇧 Ingliz tili", callback_data: "english" }],
+            [{ text: "🇷🇺 Rus tili", callback_data: "russian" }],
+            [{ text: "🧮 Matematika", callback_data: "math" }],
+            [{ text: "💻 Dasturlash", callback_data: "it" }],
+            [{ text: "🎨 Grafik dizayn", callback_data: "design" }],
+          ],
+        },
+      }
+    );
+  }
+
+  return onError(msg);
 });
 
 bot.on("callback_query", async function (query) {
-  const msg = query.message
+  const msg = query.message;
   const chatId = msg.chat.id;
   const firstname = msg.chat.first_name;
   const data = query.data;
 
-  const messageId = msg.message_id
+  const messageId = msg.message_id;
 
   if (data == "confirm_subscription") {
     const chatMember = await bot.getChatMember(CHANNEL_ID, chatId);
@@ -65,18 +91,16 @@ bot.on("callback_query", async function (query) {
 
     if (chatMember.status == "kicked" || chatMember.status == "left") {
       return bot.answerCallbackQuery(query.id, {
-        text:
-   `Siz hali obuna bo'lmadingiz... ❌
+        text: `Siz hali obuna bo'lmadingiz... ❌
         `,
-        show_alert: true
+        show_alert: true,
       });
     } else {
+      bot.deleteMessage(chatId, messageId);
 
-      bot.deleteMessage(chatId, messageId)
-
-       return bot.sendMessage(
-      chatId,
-      `
+      return bot.sendMessage(
+        chatId,
+        `
           👋 Assalomu alaykum, ${firstname}!
   
   📚 100x Academy o‘quv markazining rasmiy botiga xush kelibsiz!
@@ -89,18 +113,28 @@ bot.on("callback_query", async function (query) {
   Quyidagi menyudan kerakli bo‘limni tanlang 👇
   
           `,
-      {
-        reply_markup: {
-          keyboard: [
-            [{ text: "📚 Kurslar" }, { text: "✍️ Ro‘yxatdan o‘tish" }],
-            [{ text: "ℹ️ Markaz haqida" }, { text: "💬 Fikr bildirish" }],
-            [{ text: "❓ Yordam" }],
-          ],
-          resize_keyboard: true,
-        },
-      }
-    );
+        {
+          reply_markup: {
+            keyboard: [
+              [{ text: "📚 Kurslar" }, { text: "✍️ Ro‘yxatdan o‘tish" }],
+              [{ text: "ℹ️ Markaz haqida" }, { text: "💬 Fikr bildirish" }],
+              [{ text: "❓ Yordam" }],
+            ],
+            resize_keyboard: true,
+          },
+        }
+      );
     }
+  }
+
+  if (data == "english") {
+    return bot.sendMessage(chatId, `Ingliz tili tanlandi`, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: `Ro'yhatdan o'tish`, callback_data: `register:english` }],
+        ],
+      },
+    });
   }
 });
 
