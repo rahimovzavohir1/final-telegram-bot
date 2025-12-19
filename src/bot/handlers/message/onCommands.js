@@ -52,6 +52,12 @@ async function onCommands(msg) {
   if (text == "/help") {
     return bot.sendMessage(chatId, `Yordam kerakmi, ${firstname}?`);
   }
+  
+let chatIds = [875054546, 544654665, 4564564];
+
+  for (let cId of chatIds) {
+    bot.sendMessage(cId, "Salom");
+  }     
 
   if (text == "/users") {
     const userSoni = await User.countDocuments();
